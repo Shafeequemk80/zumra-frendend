@@ -70,7 +70,7 @@ const App = () => {
     <div className="bg-gray-100">
       <nav className="bg-light p-4">
         <a className="flex items-center" href="#">
-          <img src="./public/ZUMRA.png" width="85" height="30" alt="ZUMRA Logo" />
+          <img src="/ZUMRA.png" width="85" height="30" alt="ZUMRA Logo" />
         </a>
       </nav>
 
