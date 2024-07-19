@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TableReact from './Table';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const [name, setName] = useState('');
@@ -9,22 +11,25 @@ const App = () => {
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-
+  
   const rowsLimit = 5;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://zumra-backend.onrender.com/');
+      
         if (Array.isArray(response.data)) {
           setData(response.data);
         } else {
           console.error('Received data is not an array:', response.data);
           setError('Unexpected data format');
         }
+       
         setLoading(false);
       } catch (err) {
         setError(err.message);
+        
         setLoading(false);
       }
     };
@@ -34,19 +39,37 @@ const App = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const myPromise = axios.post('https://zumra-backend.onrender.com/', { name, unit });
+
+    toast.promise(
+      myPromise,
+      {
+        pending: 'Loading',
+        success: 'Count added successfully',
+        error: 'Error found',
+      },
+      {
+        style: {
+          minWidth: '250px',
+        },
+        success: {
+          duration: 5000,
+          icon: '🔥',
+        },
+      }
+    );
+
     try {
-      const response = await axios.post('https://zumra-backend.onrender.com/', { name, unit });
+      const response = await myPromise;
+      toast.remove();
+
       console.log('Data sent successfully:', response.data);
 
       // Update the data state with the new entry
-    
-      // setData([...response.data.data]);
-      setData((prev)=>{
-        return [...prev,response.data.data]
-      });
+      setData((prev) => [...prev, response.data.data]);
 
       // Calculate the new page number based on the new data length
-      const newTotalPages = Math.ceil(newData.length / rowsLimit);
+      const newTotalPages = Math.ceil((data.length + 1) / rowsLimit);
       setCurrentPage(newTotalPages - 1);
 
       // Clear the form after successful submission
@@ -77,21 +100,21 @@ const App = () => {
           <form id="nameForm" className="w-full max-w-md" onSubmit={handleSubmit}>
             <div className="mb-4">
               <label htmlFor="nameInput" className="block text-sm font-medium mb-1">Enter name:</label>
-              <input 
-                type="text" 
-                className="form-input w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                id="nameInput" 
-                placeholder="Enter name" 
+              <input
+                type="text"
+                className="form-input w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id="nameInput"
+                placeholder="Enter name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required 
+                required
               />
             </div>
             <div className="mb-4">
               <label htmlFor="myDropdown" className="block text-sm font-medium mb-1">Select unit:</label>
-              <select 
-                id="myDropdown" 
-                className="form-select w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
+              <select
+                id="myDropdown"
+                className="form-select w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
                 required
@@ -108,24 +131,25 @@ const App = () => {
                 <option value="Anakuzhikkara">Anakuzhikkara</option>
               </select>
             </div>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600"
             >
               Submit
             </button>
           </form>
+          <ToastContainer />
         </div>
-        <TableReact 
-          data={data} 
-          loading={loading} 
-          error={error} 
+        <TableReact
+          data={data}
+          loading={loading}
+          error={error}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
         />
       </div>
     </div>
   );
-}
+};
 
 export default App;
