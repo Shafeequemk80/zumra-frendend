@@ -3,33 +3,32 @@ import axios from 'axios';
 import TableReact from './Table';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 const App = () => {
   const [name, setName] = useState('');
   const [unit, setUnit] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
+  const [count, setCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
-  
+
   const rowsLimit = 5;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://zumra-backend.onrender.com/');
-      
+        const load=toast.loading('Loading..')
+        const response = await axios.get('http://localhost:5000/');
         if (Array.isArray(response.data)) {
+          toast.dismiss(load)
           setData(response.data);
         } else {
           console.error('Received data is not an array:', response.data);
           setError('Unexpected data format');
         }
-       
         setLoading(false);
       } catch (err) {
         setError(err.message);
-        
         setLoading(false);
       }
     };
@@ -39,37 +38,22 @@ const App = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const myPromise = axios.post('https://zumra-backend.onrender.com/', { name, unit });
-
-    toast.promise(
-      myPromise,
-      {
-        pending: 'Loading',
-        success: 'Count added successfully',
-        error: 'Error found',
-      },
-      {
-        style: {
-          minWidth: '250px',
-        },
-        success: {
-          duration: 5000,
-          icon: '🔥',
-        },
-      }
-    );
-
     try {
-      const response = await myPromise;
-      toast.remove();
-
+      const load=toast.loading('Loading..')
+      const response = await axios.post('http://localhost:5000/', { name, unit });
       console.log('Data sent successfully:', response.data);
-
+      toast.success('successfully')
+      toast.dismiss(load)
       // Update the data state with the new entry
-      setData((prev) => [...prev, response.data.data]);
+
+      // setData([...response.data.data]);
+      
+      setData((prev)=>{
+        return [response.data.data,...prev]
+      });
 
       // Calculate the new page number based on the new data length
-      const newTotalPages = Math.ceil((data.length + 1) / rowsLimit);
+      const newTotalPages = Math.ceil(newData.length / rowsLimit);
       setCurrentPage(newTotalPages - 1);
 
       // Clear the form after successful submission
@@ -80,7 +64,6 @@ const App = () => {
       // Optionally, handle error state
     }
   };
-
   return (
     <div className="bg-gray-100">
       <nav className="bg-light p-4">
@@ -94,7 +77,7 @@ const App = () => {
       <div className="container mx-auto mt-6">
         <h1 className="text-center text-3xl font-bold mb-4">ZUMRA</h1>
         <h4 className="text-center text-xl mb-4">ഖുറതുൽ ഫുആദ്</h4>
-        <h4 className="text-center text-xl mb-4" id="counter">{}</h4>
+     <h1  className="text-center text-xl mb-4"> Zumra Count {count}</h1>
 
         <div className="flex justify-center px-6">
           <form id="nameForm" className="w-full max-w-md" onSubmit={handleSubmit}>
