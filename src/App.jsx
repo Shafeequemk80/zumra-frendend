@@ -18,7 +18,7 @@ const App = () => {
     const fetchData = async () => {
       try {
         const load=toast.loading('Loading..')
-        const response = await axios.get('http://localhost:5000/');
+        const response = await axios.get('https://zumra-backend.onrender.com/');
         if (Array.isArray(response.data)) {
           toast.dismiss(load)
           setData(response.data);
@@ -41,7 +41,7 @@ const App = () => {
     event.preventDefault();
     try {
       const load=toast.loading('Loading..')
-      const response = await axios.post('http://localhost:5000/', { name, unit });
+      const response = await axios.post('https://zumra-backend.onrender.com/', { name, unit });
       console.log('Data sent successfully:', response.data);
       setCount((prev)=>prev+1)
       toast.success('successfully')
