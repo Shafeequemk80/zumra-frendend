@@ -15,7 +15,7 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/');
+        const response = await axios.get('https://zumra-backend.onrender.com/');
         if (Array.isArray(response.data)) {
           setData(response.data);
         } else {
@@ -35,7 +35,7 @@ const App = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/', { name, unit });
+      const response = await axios.post('https://zumra-backend.onrender.com/', { name, unit });
       console.log('Data sent successfully:', response.data);
 
       // Update the data state with the new entry
