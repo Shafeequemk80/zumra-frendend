@@ -22,6 +22,7 @@ const App = () => {
         if (Array.isArray(response.data)) {
           toast.dismiss(load)
           setData(response.data);
+          setCount(response.data.length)
         } else {
           console.error('Received data is not an array:', response.data);
           setError('Unexpected data format');
@@ -42,6 +43,7 @@ const App = () => {
       const load=toast.loading('Loading..')
       const response = await axios.post('http://localhost:5000/', { name, unit });
       console.log('Data sent successfully:', response.data);
+      setCount((prev)=>prev+1)
       toast.success('successfully')
       toast.dismiss(load)
       // Update the data state with the new entry
@@ -77,7 +79,10 @@ const App = () => {
       <div className="container mx-auto mt-6">
         <h1 className="text-center text-3xl font-bold mb-4">ZUMRA</h1>
         <h4 className="text-center text-xl mb-4">ഖുറതുൽ ഫുആദ്</h4>
-     <h1  className="text-center text-xl mb-4"> Zumra Count {count}</h1>
+        <h1 className="text-center text-xl mb-4"> 
+  Zumra Count <span className="font-bold text-red-500">{count}</span>
+</h1>
+ 
 
         <div className="flex justify-center px-6">
           <form id="nameForm" className="w-full max-w-md" onSubmit={handleSubmit}>
