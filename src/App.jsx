@@ -69,7 +69,7 @@ const App = () => {
 
   
   const downloadFile = async () => {
-    const url = 'http://localhost:5000/download'; // Replace with your API endpoint
+    const url = 'https://zumra-backend.onrender.com//download'; // Replace with your API endpoint
 
     try {
       const response = await axios({
