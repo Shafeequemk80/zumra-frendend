@@ -40,7 +40,7 @@ const TableReact = ({ data, loading, error, currentPage, setCurrentPage }) => {
 
   return (
     <>
-    <div className="bg-white flex items-center justify-center pt-10 pb-20">
+    <div className="bg-white flex items-center justify-center px-2 pt-10 pb-20">
       <div className="w-full max-w-4xl px-2">
         <div className="w-full overflow-x-scroll md:overflow-auto max-w-7xl 2xl:max-w-none mt-2">
           <table className="min-w-full divide-y divide-gray-200 border">
