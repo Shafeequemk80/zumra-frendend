@@ -67,6 +67,36 @@ const App = () => {
     }
   };
 
+  
+  const downloadFile = async () => {
+    const url = 'http://localhost:5000/download'; // Replace with your API endpoint
+
+    try {
+      const response = await axios({
+        url,
+        method: 'GET',
+        responseType: 'blob', // Set response type to 'blob' for binary data
+      });
+
+      // Create a URL for the file
+      const fileURL = URL.createObjectURL(new Blob([response.data]));
+      
+      // Create a link element
+      const link = document.createElement('a');
+      link.href = fileURL;
+      link.download = 'Zumra.pdf'; // Name of the file to be downloaded
+      document.body.appendChild(link);
+      
+      // Trigger a click event on the link
+      link.click();
+      
+      // Clean up
+      document.body.removeChild(link);
+      URL.revokeObjectURL(fileURL); // Release memory
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
+  };
   return (
     <div className="bg-gray-100">
     <nav className="bg-light p-4">
@@ -84,7 +114,7 @@ const App = () => {
   
       <div className="flex justify-center">
         <button
-          onClick={() => window.open('https://drive.google.com/file/d/1w1HQEjm-GD8ckFpWMq_eUK8EuiXNEfXi', '_blank')}
+          onClick={ downloadFile}
           className="text-center justify-center mb-4 bg-green-500 text-white px-5 shadow-sm hover:bg-green-600"
         >
           Class Note
@@ -158,6 +188,7 @@ const App = () => {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />
+      
     </div>
   </div>
   
