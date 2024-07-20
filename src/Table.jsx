@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 import { Spinner } from "@material-tailwind/react";
 const TableReact = ({ data, loading, error, currentPage, setCurrentPage }) => {
   const rowsLimit = 5;
@@ -35,11 +34,7 @@ const TableReact = ({ data, loading, error, currentPage, setCurrentPage }) => {
   const changePage = (pageIndex) => {
     setCurrentPage(pageIndex);
   };
-if (loading) {
-  
-  
- toast.success('Loading...');
-}
+
   
   if (error) return <p>Error: {error}</p>;
 
@@ -60,7 +55,8 @@ if (loading) {
               {rowsToShow.map((item, index) => (
                 <tr
                   className={`${index % 2 === 0 ? 'bg-white' : 'bg-[#222E3A]/[6%]'}`}
-                  key={item.name + item.unit}
+                  key={item.name + item.unit + Math.random().toString(36).substr(2, 9)}
+
                 >
                   <td
                     className={`py-2 px-3 border-t ${
@@ -139,7 +135,7 @@ if (loading) {
       </div>
       
     </div>
-          <ToastContainer />
+          
           </>
   );
 };
